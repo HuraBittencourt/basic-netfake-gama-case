@@ -23,21 +23,18 @@ class App extends Component {
     })
   )
   
-  getPopularMovies = (query) => (
-    fetch(`https://api.themoviedb.org/3/movie/${query}?api_key=${apiKey}`)
+  getPopularMovies = () => (
+    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`)
     .then(results => {
       return results.json();
-    }).then(data => {data.results})
+    }).then(data => {
+      this.setState({ popular: data.results})
+    })
   )
 
   componentDidMount() {
     this.getUpcomingsMovies();
     this.getPopularMovies();
-
-    this.setState({
-      upcomings: getApi('upcomings'),
-      popular: getApi('popular')
-    })
   }
 
   render() {
