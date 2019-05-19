@@ -3,6 +3,7 @@ import './App.css';
 import React, { Component } from 'react';
 
 import Movie from './Movie';
+import { getApi } from './service';
 import logo from './logo.svg';
 
 const apiKey = 'e5693481ef000bfdd855a0f21ad39631';
@@ -14,23 +15,25 @@ class App extends Component {
     popular: []
   }
 
-  getUpcomingsMovies = () => (
-    fetch(`https://api.themoviedb.org/3/movie/upcoming?api_key=${apiKey}`)
-    .then(results => {
-      return results.json();
-    }).then(data => {
-      this.setState({ upcomings: data.results})
-    })
-  )
+  getUpcomingsMovies = () => {
+    const apiObject = getApi('upcoming');
+
+    apiObject.then(response => (
+      this.setState({
+        upcomings: response
+      })
+    ))
+  }
   
-  getPopularMovies = () => (
-    fetch(`https://api.themoviedb.org/3/movie/popular?api_key=${apiKey}`)
-    .then(results => {
-      return results.json();
-    }).then(data => {
-      this.setState({ popular: data.results})
-    })
-  )
+  getPopularMovies = () => {
+    const apiObject = getApi('popular');
+
+    apiObject.then(response => (
+      this.setState({
+        popular: response
+      })
+    ))
+  }
 
   componentDidMount() {
     this.getUpcomingsMovies();
@@ -44,6 +47,7 @@ class App extends Component {
     return (
       <div className="App">
         <div>
+          <h1>Upcomings</h1>
           <ul className="movies">
             {upcomings.map(movie => (
               <Movie id={movie.id} titulo={movie.title} overview={movie.overview} img={movie.poster_path} />
@@ -52,6 +56,7 @@ class App extends Component {
         </div>
         
         <div>
+          <h1>Popular</h1>
           <ul className="movies">
             {popular.map(movie => (
               <Movie id={movie.id} titulo={movie.title} overview={movie.overview} img={movie.poster_path} />
